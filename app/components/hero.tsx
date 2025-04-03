@@ -65,7 +65,7 @@ export default function Hero() {
                 className="absolute inset-0 bg-teal-200 dark:bg-teal-700 rounded-full"
               ></motion.div>
               <Image
-                src="/doctor-hero.jpg"
+                src="/placeholder.svg?height=500&width=500"
                 alt="Doctor"
                 width={500}
                 height={500}

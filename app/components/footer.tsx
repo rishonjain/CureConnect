@@ -21,7 +21,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 pt-24 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-2xl font-bold mb-4">MediCare</h3>
+            <h3 className="text-2xl font-bold mb-4">CureConnect</h3>
             <p className="mb-4">Providing quality healthcare for a better tomorrow.</p>
             <div className="flex space-x-4">
               <Link href="#" className="hover:text-teal-200 transition-colors">
@@ -99,7 +99,7 @@ export default function Footer() {
       </div>
       <div className="bg-teal-700 dark:bg-teal-900 py-4">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2023 MediCare. All rights reserved.</p>
+          <p>&copy; 2023 CureConnect. All rights reserved.</p>
         </div>
       </div>
     </footer>

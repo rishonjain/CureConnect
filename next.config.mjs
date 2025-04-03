@@ -13,6 +13,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
@@ -20,24 +23,21 @@ const nextConfig = {
   },
 }
 
-mergeConfig(nextConfig, userConfig)
+if (userConfig) {
+  // ESM imports will have a "default" property
+  const config = userConfig.default || userConfig
 
-function mergeConfig(nextConfig, userConfig) {
-  if (!userConfig) {
-    return
-  }
-
-  for (const key in userConfig) {
+  for (const key in config) {
     if (
       typeof nextConfig[key] === 'object' &&
       !Array.isArray(nextConfig[key])
     ) {
       nextConfig[key] = {
         ...nextConfig[key],
-        ...userConfig[key],
+        ...config[key],
       }
     } else {
-      nextConfig[key] = userConfig[key]
+      nextConfig[key] = config[key]
     }
   }
 }

@@ -19,7 +19,7 @@ type Message = {
 const initialMessages: Message[] = [
   {
     role: "assistant",
-    content: "Hello! I'm MediBot, your AI health assistant. How can I help you today?",
+    content: "Hello! I'm CureBot, your AI health assistant. How can I help you today?",
   },
   {
     role: "assistant",
@@ -112,9 +112,9 @@ export default function AIChatbot() {
       <main className="flex-1 container mx-auto max-w-4xl p-4 flex flex-col">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 mb-4 flex-1 overflow-hidden flex flex-col">
           <div className="mb-4 p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-            <h2 className="text-lg font-semibold text-teal-700 dark:text-teal-300 mb-2">About MediBot</h2>
+            <h2 className="text-lg font-semibold text-teal-700 dark:text-teal-300 mb-2">About CureBot</h2>
             <p className="text-gray-700 dark:text-gray-300">
-              MediBot uses advanced AI to provide general health information and guidance. While it can offer helpful
+              CureBot uses advanced AI to provide general health information and guidance. While it can offer helpful
               insights, it's not a substitute for professional medical advice. Always consult with healthcare
               professionals for medical concerns.
             </p>
@@ -144,7 +144,7 @@ export default function AIChatbot() {
                       ) : (
                         <User className="w-4 h-4 mr-2" />
                       )}
-                      <span className="font-semibold">{message.role === "assistant" ? "MediBot" : "You"}</span>
+                      <span className="font-semibold">{message.role === "assistant" ? "CureBot" : "You"}</span>
                     </div>
                     <p className={message.role === "user" ? "text-white" : "text-gray-800 dark:text-gray-200"}>
                       {message.content}
@@ -161,7 +161,7 @@ export default function AIChatbot() {
                   <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 rounded-tl-none">
                     <div className="flex items-center">
                       <Bot className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
-                      <span className="font-semibold">MediBot</span>
+                      <span className="font-semibold">CureBot</span>
                     </div>
                     <div className="flex space-x-1 mt-2">
                       <div

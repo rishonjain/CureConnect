@@ -10,19 +10,19 @@ const testimonials = [
     name: "John Doe",
     role: "Patient",
     content: "The care I received was exceptional. The doctors were knowledgeable and compassionate.",
-    image: "/testimonial-1.jpg",
+    image: "/placeholder.svg?height=100&width=100",
   },
   {
     name: "Jane Smith",
     role: "Patient",
     content: "I was impressed by the state-of-the-art facilities and the friendly staff. Highly recommended!",
-    image: "/testimonial-2.jpg",
+    image: "/placeholder.svg?height=100&width=100",
   },
   {
     name: "Mike Johnson",
     role: "Patient",
     content: "The quick response and efficient treatment I received saved my life. I'm forever grateful.",
-    image: "/testimonial-3.jpg",
+    image: "/placeholder.svg?height=100&width=100",
   },
 ]
 

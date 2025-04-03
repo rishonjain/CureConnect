@@ -9,19 +9,19 @@ const features = [
     icon: Clock,
     title: "24/7 Availability",
     description: "Our medical professionals are available round the clock for your healthcare needs.",
-    image: "/feature-247.jpg",
+    image: "/placeholder.svg?height=250&width=400",
   },
   {
     icon: UserPlus,
     title: "Easy Appointments",
     description: "Book your appointments online with just a few clicks.",
-    image: "/feature-appointment.jpg",
+    image: "/placeholder.svg?height=250&width=400",
   },
   {
     icon: Stethoscope,
     title: "Expert Doctors",
     description: "Get treated by our team of experienced and skilled medical professionals.",
-    image: "/feature-doctors.jpg",
+    image: "/placeholder.svg?height=250&width=400",
   },
 ]
 

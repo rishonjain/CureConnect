@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Menu, X, Sun, Moon } from "lucide-react"
+import { Menu, X, Sun, Moon, Video } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const navItems = [
-  { name: "Home", href: "#" },
-  { name: "MediBot", href: "/ai-assistant" },
+  { name: "Home", href: "/" },
+  { name: "CureBot", href: "/ai-assistant" },
+  { name: "Video Consultations", href: "/video-conference" },
   { name: "Doctors", href: "#doctors" },
-  { name: "Appointments", href: "#appointments" },
   { name: "Contact", href: "#contact" },
 ]
 
@@ -41,15 +41,16 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-teal-600 dark:text-teal-400">
-          MediCare
+          CureConnect
         </Link>
         <nav className="hidden md:flex space-x-8">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+              className="text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-center"
             >
+              {item.name === "Video Consultations" && <Video className="w-4 h-4 mr-1" />}
               {item.name}
             </Link>
           ))}
@@ -83,9 +84,10 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900 hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-center"
                 onClick={() => setIsOpen(false)}
               >
+                {item.name === "Video Consultations" && <Video className="w-4 h-4 mr-1" />}
                 {item.name}
               </Link>
             ))}
