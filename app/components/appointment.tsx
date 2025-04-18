@@ -135,4 +135,3 @@ export default function Appointment() {
     </section>
   )
 }
-

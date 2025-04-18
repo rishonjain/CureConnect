@@ -9,4 +9,3 @@ export const metadata: Metadata = {
 export default function VideoConferenceRoomPage({ params }: { params: { id: string } }) {
   return <VideoConferenceRoom roomId={params.id} />
 }
-

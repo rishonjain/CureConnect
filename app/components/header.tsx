@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Menu, X, Sun, Moon, Video } from "lucide-react"
+import { Menu, X, Sun, Moon, Video, UserRound } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const navItems = [
   { name: "Home", href: "/" },
   { name: "CureBot", href: "/ai-assistant" },
   { name: "Video Consultations", href: "/video-conference" },
-  { name: "Doctors", href: "#doctors" },
+  { name: "Doctors", href: "/doctors", icon: UserRound },
   { name: "Contact", href: "#contact" },
 ]
 
@@ -50,6 +50,7 @@ export default function Header() {
               href={item.href}
               className="text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-center"
             >
+              {item.icon && <item.icon className="w-4 h-4 mr-1" />}
               {item.name === "Video Consultations" && <Video className="w-4 h-4 mr-1" />}
               {item.name}
             </Link>
@@ -87,6 +88,7 @@ export default function Header() {
                 className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900 hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-center"
                 onClick={() => setIsOpen(false)}
               >
+                {item.icon && <item.icon className="w-4 h-4 mr-1" />}
                 {item.name === "Video Consultations" && <Video className="w-4 h-4 mr-1" />}
                 {item.name}
               </Link>
@@ -97,4 +99,3 @@ export default function Header() {
     </header>
   )
 }
-

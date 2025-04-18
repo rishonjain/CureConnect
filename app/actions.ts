@@ -22,4 +22,3 @@ export async function generateAIResponse(message: string) {
   const randomResponse = sampleResponses[Math.floor(Math.random() * sampleResponses.length)]
   return randomResponse
 }
-

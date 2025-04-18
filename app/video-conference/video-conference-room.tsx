@@ -594,4 +594,3 @@ export default function VideoConferenceRoom({ roomId }: VideoConferenceRoomProps
     </div>
   )
 }
-
