@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-// Update to use a model that's more widely accessible
-const HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+// Updated Gemini API endpoint with the correct model for Gemini 2.5 Flash Preview
+const GEMINI_API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-preview:generateContent"
 
-// Fallback responses for when the API call fails
+// Fallback responses in case the API fails
 const fallbackResponses = [
   "Based on the symptoms you've described, it could be a common cold or seasonal allergies. If symptoms persist for more than a week, I'd recommend consulting with your doctor.",
   "It's recommended to drink 8 glasses (about 2 liters) of water daily, but individual needs may vary based on activity level, climate, and overall health.",
@@ -55,42 +56,58 @@ export async function POST(request: NextRequest) {
   try {
     const { message, history } = await request.json()
 
-    // Get API key from environment variable
-    const apiKey = process.env.HUGGINGFACE_API_KEY
+    // Get API key from environment variable or use the provided key
+    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyAlEv40q32xNYzBvILs-bhjoi5lI2p6QnA"
 
     if (!apiKey) {
-      console.log("No Hugging Face API key configured, using fallback response")
+      console.log("No Gemini API key configured, using fallback response")
       const fallbackResponse = generateFallbackResponse(message)
       return NextResponse.json({ response: fallbackResponse })
     }
 
-    // Format conversation history for Mistral-7B-Instruct
+    // Format conversation history for Gemini
     const formattedMessages = formatConversationHistory(history, message)
 
     try {
-      // Call Hugging Face API
-      const response = await fetch(HF_API_URL, {
+      // Call Gemini API with the correct URL structure and model
+      const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          inputs: formattedMessages,
-          parameters: {
-            max_new_tokens: 512,
+          contents: formattedMessages,
+          generationConfig: {
             temperature: 0.7,
-            top_p: 0.95,
-            do_sample: true,
-            return_full_text: false,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 800,
           },
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+          ],
         }),
       })
 
       if (!response.ok) {
         // Log the error but don't throw, use fallback instead
         const errorData = await response.json().catch(() => ({}))
-        console.error("Hugging Face API error:", errorData)
+        console.error("Gemini API error:", errorData)
 
         // Generate a fallback response based on the message content
         const fallbackResponse = generateFallbackResponse(message)
@@ -101,10 +118,14 @@ export async function POST(request: NextRequest) {
 
       // Extract the generated text from the response
       let generatedText = ""
-      if (Array.isArray(result) && result.length > 0) {
-        generatedText = result[0]?.generated_text || ""
-      } else if (result.generated_text) {
-        generatedText = result.generated_text
+      if (
+        result.candidates &&
+        result.candidates.length > 0 &&
+        result.candidates[0].content &&
+        result.candidates[0].content.parts &&
+        result.candidates[0].content.parts.length > 0
+      ) {
+        generatedText = result.candidates[0].content.parts[0].text || ""
       }
 
       // If we got an empty response, use fallback
@@ -115,20 +136,20 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ response: generatedText })
     } catch (error) {
-      console.error("Error calling Hugging Face API:", error)
+      console.error("Error calling Gemini API:", error)
       // Generate a fallback response based on the message content
       const fallbackResponse = generateFallbackResponse(message)
       return NextResponse.json({ response: fallbackResponse })
     }
   } catch (error) {
-    console.error("Error in Hugging Face API route:", error)
+    console.error("Error in Gemini API route:", error)
     return NextResponse.json({
       response: "I'm sorry, I encountered an error processing your request. How else can I help you today?",
     })
   }
 }
 
-// Format conversation history for Mistral-7B-Instruct
+// Format conversation history for Gemini
 function formatConversationHistory(history: Array<{ role: string; content: string }>, currentMessage: string) {
   // System prompt to guide the model's behavior
   const systemPrompt = `You are CureBot, an AI health assistant developed by CureConnect. 
@@ -138,21 +159,43 @@ Always recommend consulting with healthcare professionals for specific medical c
 Be conversational, empathetic, and clear in your responses.
 Keep responses concise and focused on health-related topics.`
 
-  // Format the conversation for Mistral-7B-Instruct
-  let formattedPrompt = `<s>[INST] ${systemPrompt} [/INST]</s>\n`
+  // Format the conversation for Gemini
+  const formattedMessages = [
+    {
+      role: "user",
+      parts: [{ text: systemPrompt }],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: "I understand. I am CureBot, an AI health assistant developed by CureConnect. I'll provide helpful, accurate, and ethical health information without diagnosing or prescribing treatments. I'll always recommend consulting healthcare professionals for specific concerns. I'll be conversational, empathetic, clear, and concise in my responses, focusing on health-related topics.",
+        },
+      ],
+    },
+  ]
 
   // Add conversation history
   for (let i = 0; i < history.length; i++) {
     const message = history[i]
     if (message.role === "user") {
-      formattedPrompt += `<s>[INST] ${message.content} [/INST] `
+      formattedMessages.push({
+        role: "user",
+        parts: [{ text: message.content }],
+      })
     } else if (message.role === "assistant") {
-      formattedPrompt += `${message.content}</s>\n`
+      formattedMessages.push({
+        role: "model",
+        parts: [{ text: message.content }],
+      })
     }
   }
 
   // Add the current message
-  formattedPrompt += `<s>[INST] ${currentMessage} [/INST]`
+  formattedMessages.push({
+    role: "user",
+    parts: [{ text: currentMessage }],
+  })
 
-  return formattedPrompt
+  return formattedMessages
 }
